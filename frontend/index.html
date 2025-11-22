@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Twitter Clone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Mini Twitter Clone</h1>
+    </header>
+
+    <div class="container">
+        <!-- Timeline Feed -->
+        <div class="timeline">
+          <!-- Create Tweet -->
+          <div class="create-tweet">
+              <input type="text" id="new-user" placeholder="Your username">
+              <textarea id="new-content" placeholder="What's happening?"></textarea>
+              <button onclick="postTweet()">Tweet</button>
+          </div>
+      
+          <!-- Filter by Username -->
+          <div class="filter-tweets">
+              <input type="text" id="filter-user" placeholder="Filter tweets by username">
+              <button onclick="loadTweetsByUser(document.getElementById('filter-user').value)">Search</button>
+          </div>
+      
+          <h2>Timeline</h2>
+          <div id="tweets">
+              <!-- Tweets will appear here -->
+          </div>
+      </div>
+      
+
+        <!-- Sidebar Users -->
+        <div class="sidebar">
+            <h3>Users</h3>
+            <ul id="users">
+                <!-- Users list here -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
