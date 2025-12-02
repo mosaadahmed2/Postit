@@ -17,14 +17,28 @@ services:
       timeout: 5s
       retries: 5
 
+  # ✅ Add Redis
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   backend1:
     build:
       context: ./backend
     depends_on:
       db:
         condition: service_healthy
+      redis:  # ✅ Add dependency
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:password@db:5432/twitter_db
+      - REDIS_URL=redis://redis:6379  # ✅ Add Redis URL
     ports:
       - "8081:8085"
 
@@ -34,8 +48,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:  # ✅ Add dependency
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:password@db:5432/twitter_db
+      - REDIS_URL=redis://redis:6379  # ✅ Add Redis URL
     ports:
       - "8082:8085"
 
@@ -45,15 +62,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:  # ✅ Add dependency
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:password@db:5432/twitter_db
+      - REDIS_URL=redis://redis:6379  # ✅ Add Redis URL
     ports:
       - "8083:8085"
 
   nginx:
     image: nginx:latest
     ports:
-      - "8086:8085"   # host:container (8086 on your Mac → 8085 inside container)
+      - "8086:8085"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./frontend:/usr/share/nginx/html
@@ -61,7 +81,6 @@ services:
       - backend1
       - backend2
       - backend3
-
 
 volumes:
   postgres_data:

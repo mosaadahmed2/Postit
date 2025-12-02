@@ -13,6 +13,11 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
 import redis
+from redis import asyncio as aioredis 
+
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 import os
@@ -38,11 +43,15 @@ if __name__ == "__main__":
 
 print(f"Server started on port {os.getenv('PORT')}")
 
+# Then in your startup function:
 @app.on_event("startup")
 async def startup_event():
-    redis_client = redis.from_url("redis://127.0.0.1:6379", encoding="utf-8", decode_responses=True)
+    logger.info("🚀 Startup event triggered!")
+    redis_url = os.getenv("REDIS_URL", "redis://redis:6379")
+    logger.info(f"📍 Connecting to Redis at: {redis_url}")
+    redis_client = aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis_client), prefix="fastapi-cache")
-    print("✅ Connected to Redis successfully")
+    logger.info("✅ Connected to Redis successfully")
 
 
 @app.get("/status")
