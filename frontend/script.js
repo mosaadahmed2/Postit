@@ -10,31 +10,65 @@ ws.onmessage = function(event) {
 // Optionally, send a message to server
 // ws.send("Hello from client");
 
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+
+document.getElementById("theme-toggle").onclick = () => {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+};
+
+// Restore theme on page load
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+}
+
+
+function generateTweetHTML(tweet) {
+    const avatar = `https://ui-avatars.com/api/?name=${tweet.user}&background=1da1f2&color=fff`;
+
+    return `
+    <div class="tweet fade-in">
+        <img class="avatar" src="${avatar}" alt="${tweet.user}">
+        <div class="tweet-content">
+            <div class="tweet-header">
+                <span class="tweet-user">${tweet.user}</span>
+            </div>
+            <div class="tweet-text">${tweet.content}</div>
+
+            <div class="tweet-actions">
+                <button class="like-btn">❤️ Like</button>
+                <button onclick="updateTweetPrompt(${tweet.id})">✏️ Edit</button>
+                <button onclick="deleteTweet(${tweet.id})">🗑 Delete</button>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+
+
 
 
 // Load tweets (optionally by username)
 function loadTweets() {
     const tweetsContainer = document.getElementById("tweets");
-    if (!tweetsContainer) return; // avoids null error
+    if (!tweetsContainer) return;
 
     fetch("http://127.0.0.1:8086/tweet/all")
         .then(res => res.json())
         .then(data => {
             tweetsContainer.innerHTML = "";
+            // ⭐ Reverse so newest tweets appear first
+            data.reverse();
             data.forEach(tweet => {
-                tweetsContainer.innerHTML += `
-                    <div class="tweet">
-                        <b>${tweet.user}</b>: ${tweet.content}
-                        <button onclick="deleteTweet(${tweet.id})">Delete</button>
-                        <button onclick="updateTweetPrompt(${tweet.id})">Edit</button>
-                    </div>
-                `;
-                
+                tweetsContainer.innerHTML += generateTweetHTML(tweet);
             });
-           
-            
         });
 }
+
 
 // Search tweets by username
 async function loadTweetsByUser(user) {
@@ -46,19 +80,16 @@ async function loadTweetsByUser(user) {
         const data = await res.json();
 
         tweetsContainer.innerHTML = "";
+        // ⭐ Reverse so newest tweets appear first
+        data.reverse();
         data.forEach(tweet => {
-            tweetsContainer.innerHTML += `
-                <div class="tweet">
-                    <b>${tweet.user}</b>: ${tweet.content}
-                    <button onclick="deleteTweet(${tweet.id})">Delete</button>
-                    <button onclick="updateTweetPrompt(${tweet.id})">Edit</button>
-                </div>
-            `;
+            tweetsContainer.innerHTML += generateTweetHTML(tweet);
         });
     } catch (err) {
         console.error("Failed to load tweets by user:", err);
     }
 }
+
 
 
 
@@ -141,6 +172,8 @@ async function deleteTweet(id) {
         console.error("Failed to delete tweet:", err);
     }
 }
+
+
 
 
 // Load all tweets on page load

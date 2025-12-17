@@ -139,6 +139,62 @@ header {
     color: #1da1f2;
 }
 
+/* Tweet Card Style */
+.tweet-card {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+}
+
+.tweet-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.tweet-user {
+    font-weight: bold;
+    font-size: 15px;
+    color: #1da1f2;
+    margin-bottom: 6px;
+}
+
+.tweet-content {
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.tweet-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+}
+
+.tweet-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #1da1f2;
+}
+
+.tweet-actions button:hover {
+    opacity: 0.7;
+}
+
+.tweet-actions .update {
+    background-color: #ffcf33;
+}
+
+.tweet-actions .delete {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+
 .tweet button:hover {
     background-color: #1da1f2;
     color: white;
@@ -174,3 +230,70 @@ header {
 .sidebar li:hover {
     background-color: #f0f8ff;
 }
+
+/* Dark mode */
+body.dark {
+    background-color: #15202B;
+    color: white;
+}
+
+body.dark .timeline,
+body.dark .sidebar {
+    background-color: #192734;
+    color: white;
+    border-color: #253341;
+}
+
+body.dark .tweet {
+    border-color: #253341;
+}
+
+body.dark header {
+    background-color: #0d0d0d;
+}
+
+.floating-tweet-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 55px;
+    height: 55px;
+    background-color: #1da1f2;
+    color: white;
+    border-radius: 50%;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.floating-tweet-btn:hover {
+    transform: scale(1.1);
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .timeline, .sidebar {
+        width: 100%;
+    }
+
+    .tweet {
+        display: flex;
+        gap: 12px;
+    }
+}
+
