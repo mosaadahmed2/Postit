@@ -15,6 +15,22 @@ body.dark {
     color: #e7e9ea;
 }
 
+/* Dark mode tweet cards */
+body.dark .tweet {
+    background: #16181c;
+    color: #e7e9ea;
+    border-bottom: 1px solid #2f3336;
+  }
+  
+  body.dark .tweet-user {
+    color: #1da1f2;
+  }
+  
+  body.dark .tweet-text {
+    color: #e7e9ea;
+  }
+  
+
 header {
     background-color: #14171a;
     color: white;
@@ -122,9 +138,18 @@ header {
 }
 
 .tweet {
-    border-bottom: 1px solid #eee;
-    padding: 10px 0;
-}
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .tweet:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+  
 
 .tweet:last-child {
     border-bottom: none;
