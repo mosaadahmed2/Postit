@@ -25,6 +25,41 @@ if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark");
 }
 
+async function likeTweet(tweetId) {
+    const userInput = document.getElementById("user");
+
+    if (!userInput) {
+        alert("Username input is not found in DOM");
+        return;
+    }
+
+    const user = userInput.value.trim();
+
+    if (!user) {
+        alert("Please enter your username first!");
+        return;
+    }
+
+    try {
+        const res = await fetch(`http://127.0.0.1:8086/tweet/${tweetId}/like`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user })
+        });
+
+        if (res.ok) {
+            loadTweets(); // refresh likes
+        } else {
+            const err = await res.text();
+            alert("Like failed: " + err);
+        }
+    } catch (err) {
+        console.error("Failed to like tweet:", err);
+    }
+}
+
+
+
 
 function generateTweetHTML(tweet) {
     const avatar = `https://ui-avatars.com/api/?name=${tweet.user}&background=1da1f2&color=fff`;
@@ -39,7 +74,11 @@ function generateTweetHTML(tweet) {
             <div class="tweet-text">${tweet.content}</div>
 
             <div class="tweet-actions">
-                <button class="like-btn">❤️ Like</button>
+                <button class="like-btn" onclick="likeTweet(${tweet.id})">
+  ❤️ ${tweet.likes}
+</button>
+
+
                 <button onclick="updateTweetPrompt(${tweet.id})">✏️ Edit</button>
                 <button onclick="deleteTweet(${tweet.id})">🗑 Delete</button>
             </div>
@@ -105,8 +144,7 @@ async function loadUsers() {
             const li = document.createElement("li");
             li.textContent = user;
             li.onclick = () => {
-                document.getElementById("filter-user").value = user;
-                loadTweets();
+                loadTweetsByUser(user);   // 👈 filter tweets
             };
             usersList.appendChild(li);
         });

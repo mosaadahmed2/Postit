@@ -6,8 +6,13 @@
 }
 
 body {
-    background-color: #f5f8fa;
-    color: #14171a;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Dark mode */
+body.dark {
+    background: #0f1419;
+    color: #e7e9ea;
 }
 
 header {
@@ -16,6 +21,9 @@ header {
     padding: 15px 0;
     text-align: center;
     font-size: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .container {
@@ -231,11 +239,7 @@ header {
     background-color: #f0f8ff;
 }
 
-/* Dark mode */
-body.dark {
-    background-color: #15202B;
-    color: white;
-}
+
 
 body.dark .timeline,
 body.dark .sidebar {
@@ -296,4 +300,14 @@ body.dark header {
         gap: 12px;
     }
 }
+
+.like-btn {
+    color: #e0245e;
+    font-weight: bold;
+}
+
+.like-btn:hover {
+    opacity: 0.8;
+}
+
 

@@ -21,10 +21,12 @@ logger = logging.getLogger(__name__)
 
 
 import os
+from models import TweetLike
+from schemas import LikeRequest
 
 
 # Create the tables if they don’t exist
-models.Base.metadata.create_all(bind=engine)
+#   models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -43,6 +45,33 @@ if __name__ == "__main__":
 
 print(f"Server started on port {os.getenv('PORT')}")
 
+
+@app.post("/tweet/{tweet_id}/like")
+def like_tweet(
+    tweet_id: int,
+    req: schemas.LikeRequest,
+    db: Session = Depends(get_db)
+):
+    tweet = db.query(models.TweetDB).filter(models.TweetDB.id == tweet_id).first()
+    if not tweet:
+        raise HTTPException(status_code=404, detail="Tweet not found")
+
+    # prevent double like
+    existing = db.query(models.TweetLike).filter(
+        models.TweetLike.tweet_id == tweet_id,
+        models.TweetLike.user == req.user
+    ).first()
+
+    if existing:
+        raise HTTPException(status_code=400, detail="Already liked")
+
+    like = models.TweetLike(user=req.user, tweet_id=tweet_id)
+    db.add(like)
+    db.commit()
+
+    return {"message": "Liked successfully"}
+
+
 # Then in your startup function:
 @app.on_event("startup")
 async def startup_event():
@@ -59,6 +88,9 @@ def status():
     hostname = os.getenv("HOSTNAME", "unknown")
     pid = os.getpid()
     return {"server": hostname, "pid": pid, "message": "I'm alive!"}
+
+
+
 
 
 # Keep track of all connected clients
@@ -107,11 +139,18 @@ async def create_tweet(tweet: schemas.Tweet, db: Session = Depends(get_db)):
     return {"message": "Tweet created", "tweet": db_tweet}
 
 
-# Get all tweets
-@app.get("/tweet/all", response_model=List[schemas.Tweet])
-@cache(expire=60)  # Cache this endpoint for 60 seconds
+@app.get("/tweet/all")
 def get_all_tweets(db: Session = Depends(get_db)):
-    return db.query(models.TweetDB).all()
+    tweets = db.query(models.TweetDB).all()
+    return [
+        {
+            "id": t.id,
+            "user": t.user,
+            "content": t.content,
+            "likes": len(t.liked_by)
+        }
+        for t in tweets
+    ]
 
 # Get tweets by username
 @app.get("/tweet/{user}", response_model=List[schemas.Tweet])
