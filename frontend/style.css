@@ -29,7 +29,17 @@ body.dark .tweet {
   body.dark .tweet-text {
     color: #e7e9ea;
   }
-  
+
+  body.dark .left-sidebar {
+    background-color: #192734;
+    color: #e1e8ed;
+}
+
+body.dark .left-sidebar .menu li:hover {
+    background-color: #253341;
+}
+
+
 
 header {
     background-color: #14171a;
@@ -44,7 +54,7 @@ header {
 
 .container {
     display: flex;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 20px auto;
     gap: 20px;
 }
@@ -137,13 +147,46 @@ header {
     transform: scale(1.05);
 }
 
+/* Avatar in tweets */
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
 .tweet {
-    background: #fff;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
+    display: flex;
+    gap: 10px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* Tweet content area */
+.tweet-content {
+    flex: 1;
+}
+
+.tweet-user {
+    font-weight: bold;
+    color: #1da1f2;
+}
+
+/* Avatar in users list */
+.avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.sidebar li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
   
   .tweet:hover {
     transform: translateY(-2px);
@@ -187,18 +230,7 @@ header {
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
-.tweet-user {
-    font-weight: bold;
-    font-size: 15px;
-    color: #1da1f2;
-    margin-bottom: 6px;
-}
 
-.tweet-content {
-    font-size: 14px;
-    margin-bottom: 10px;
-    line-height: 1.4;
-}
 
 .tweet-actions {
     margin-top: 10px;
@@ -327,12 +359,63 @@ body.dark header {
 }
 
 .like-btn {
+    transition: transform 0.2s;
+  }
+  
+  .like-btn.liked {
     color: #e0245e;
-    font-weight: bold;
-}
+    transform: scale(1.2);
+  }
+  
 
 .like-btn:hover {
     opacity: 0.8;
 }
 
+.skeleton {
+    height: 60px;
+    background: linear-gradient(90deg, #eee, #ddd, #eee);
+    animation: shimmer 1.2s infinite;
+  }
+
+
+  .left-sidebar {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    height: fit-content;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+
+.left-sidebar .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1da1f2;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.left-sidebar .menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.left-sidebar .menu li {
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.left-sidebar .menu li:hover {
+    background-color: #e8f5fd;
+}
+
+  
 

@@ -25,20 +25,18 @@ if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark");
 }
 
-async function likeTweet(tweetId) {
+async function likeTweet(tweetId, btn) {
     const userInput = document.getElementById("user");
-
-    if (!userInput) {
-        alert("Username input is not found in DOM");
-        return;
-    }
-
-    const user = userInput.value.trim();
+    const user = userInput ? userInput.value : "";
 
     if (!user) {
-        alert("Please enter your username first!");
+        alert("Please enter your username first");
         return;
     }
+
+    // ✅ Animation here
+    btn.classList.add("liked");
+    setTimeout(() => btn.classList.remove("liked"), 300);
 
     try {
         const res = await fetch(`http://127.0.0.1:8086/tweet/${tweetId}/like`, {
@@ -48,10 +46,7 @@ async function likeTweet(tweetId) {
         });
 
         if (res.ok) {
-            loadTweets(); // refresh likes
-        } else {
-            const err = await res.text();
-            alert("Like failed: " + err);
+            loadTweets();
         }
     } catch (err) {
         console.error("Failed to like tweet:", err);
@@ -61,8 +56,9 @@ async function likeTweet(tweetId) {
 
 
 
+
 function generateTweetHTML(tweet) {
-    const avatar = `https://ui-avatars.com/api/?name=${tweet.user}&background=1da1f2&color=fff`;
+    const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(tweet.user)}&background=1da1f2&color=fff`;
 
     return `
     <div class="tweet fade-in">
@@ -74,11 +70,7 @@ function generateTweetHTML(tweet) {
             <div class="tweet-text">${tweet.content}</div>
 
             <div class="tweet-actions">
-                <button class="like-btn" onclick="likeTweet(${tweet.id})">
-  ❤️ ${tweet.likes}
-</button>
-
-
+                <button class="like-btn" onclick="likeTweet(${tweet.id}, this)">❤️ ${tweet.likes}</button>
                 <button onclick="updateTweetPrompt(${tweet.id})">✏️ Edit</button>
                 <button onclick="deleteTweet(${tweet.id})">🗑 Delete</button>
             </div>
@@ -86,6 +78,7 @@ function generateTweetHTML(tweet) {
     </div>
     `;
 }
+
 
 
 
@@ -142,12 +135,21 @@ async function loadUsers() {
 
         users.forEach(user => {
             const li = document.createElement("li");
-            li.textContent = user;
+            const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(user)}&background=random&color=fff`;
+        
+            li.innerHTML = `
+                <img class="avatar-small" src="${avatar}" alt="${user}">
+                <span>${user}</span>
+            `;
+        
             li.onclick = () => {
-                loadTweetsByUser(user);   // 👈 filter tweets
+                document.getElementById("filter-user").value = user;
+                loadTweetsByUser(user);
             };
+        
             usersList.appendChild(li);
         });
+        
     } catch (err) {
         console.error("Failed to load users:", err);
     }
