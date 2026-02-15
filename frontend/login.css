@@ -1,0 +1,31 @@
+body {
+    background: #1da1f2;
+    font-family: Arial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.login-card button {
+    width: 100%;
+    padding: 10px;
+    background: #1da1f2;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

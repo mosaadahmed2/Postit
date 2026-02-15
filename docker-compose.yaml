@@ -39,6 +39,7 @@ services:
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:password@db:5432/twitter_db
       - REDIS_URL=redis://redis:6379  # ✅ Add Redis URL
+      - CRICKET_API_KEY=1f5d33ce-c43b-4fa0-9fe6-5109aef84a94 # Add this
     ports:
       - "8081:8085"
 
@@ -53,6 +54,7 @@ services:
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:password@db:5432/twitter_db
       - REDIS_URL=redis://redis:6379  # ✅ Add Redis URL
+      - CRICKET_API_KEY=1f5d33ce-c43b-4fa0-9fe6-5109aef84a94  # Add this
     ports:
       - "8082:8085"
 
@@ -67,6 +69,7 @@ services:
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:password@db:5432/twitter_db
       - REDIS_URL=redis://redis:6379  # ✅ Add Redis URL
+      - CRICKET_API_KEY=1f5d33ce-c43b-4fa0-9fe6-5109aef84a94  # Add this
     ports:
       - "8083:8085"
 

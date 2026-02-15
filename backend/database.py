@@ -1,19 +1,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+import os
 
-DATABASE_URL = "postgresql+psycopg2://mosaadahmed:Mosaad%40786@host.docker.internal:5432/mini_twitter"
-
-
-
-
-# replace with your username:password@host:port/dbname
+# Use the correct PostgreSQL credentials from docker-compose
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+psycopg2://postgres:password@db:5432/mini_twitter"
+)
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-
 Base = declarative_base()
 
-# Dependency to get DB sessionmmm
 def get_db():
     db = SessionLocal()
     try:

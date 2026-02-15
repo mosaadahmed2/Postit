@@ -1,5 +1,1146 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Dark mode */
+/* Professional Header/Navbar */
+header {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ddb 100%);
+    color: white;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin: 0;
+    display: inline-block;
+}
+
+/* Navbar Container */
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Navbar Buttons */
+.navbar-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Professional Button Styling */
+header button {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+header button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+header button:active {
+    transform: translateY(0);
+}
+
+/* Logout Button - Distinct Style */
+.logout-btn {
+    background: rgba(239, 68, 68, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.logout-btn:hover {
+    background: rgba(220, 38, 38, 1) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Dark Mode Toggle Button */
+#theme-toggle {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Dark Mode Navbar */
+body.dark header {
+    background: linear-gradient(135deg, #15202b 0%, #192734 100%);
+    border-bottom: 1px solid #38444d;
+}
+
+body.dark header button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark header button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+    .navbar-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    header button {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+.container {
+    display: flex;
+    max-width: 1400px;
+    margin: 20px auto;
+    gap: 20px;
+}
+
+.timeline {
+    flex: 3;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.create-tweet {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.create-tweet input,
+.create-tweet textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    font-size: 14px;
+}
+
+.create-tweet textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.create-tweet button {
+    align-self: flex-end;
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.create-tweet button:hover {
+    background-color: #0d8ddb;
+}
+
+/* ✅ Enhanced filter/search section */
+.filter-tweets {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+}
+
+.filter-tweets input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 2px solid #1da1f2;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.filter-tweets input:focus {
+    border-color: #0d8ddb;
+    box-shadow: 0 0 5px rgba(29, 161, 242, 0.3);
+}
+
+.filter-tweets button {
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.filter-tweets button:hover {
+    background-color: #0d8ddb;
+    transform: scale(1.05);
+}
+
+/* Avatar in tweets */
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.tweet {
+    display: flex;
+    gap: 10px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* Tweet content area */
+.tweet-content {
+    flex: 1;
+}
+
+.tweet-user {
+    font-weight: bold;
+    color: #1da1f2;
+}
+
+/* Avatar in users list */
+.avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.sidebar li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+  
+  .tweet:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+  
+
+.tweet:last-child {
+    border-bottom: none;
+}
+
+.tweet b {
+    font-weight: bold;
+    color: #1da1f2;
+}
+
+.tweet button {
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    background-color: #e8f5fd;
+    color: #1da1f2;
+}
+
+/* Tweet Card Style */
+.tweet-card {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+}
+
+.tweet-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+
+
+.tweet-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+}
+
+.tweet-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #1da1f2;
+}
+
+.tweet-actions button:hover {
+    opacity: 0.7;
+}
+
+.tweet-actions .update {
+    background-color: #ffcf33;
+}
+
+.tweet-actions .delete {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+
+.tweet button:hover {
+    background-color: #1da1f2;
+    color: white;
+}
+
+.sidebar {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.sidebar h3 {
+    margin-bottom: 10px;
+    color: #1da1f2;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.sidebar li:last-child {
+    border-bottom: none;
+}
+
+.sidebar li:hover {
+    background-color: #f0f8ff;
+}
+
+
+
+body.dark .timeline,
+body.dark .sidebar {
+    background-color: #192734;
+    color: white;
+    border-color: #253341;
+}
+
+body.dark .tweet {
+    border-color: #253341;
+}
+
+body.dark header {
+    background-color: #0d0d0d;
+}
+
+.floating-tweet-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 55px;
+    height: 55px;
+    background-color: #1da1f2;
+    color: white;
+    border-radius: 50%;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.floating-tweet-btn:hover {
+    transform: scale(1.1);
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .timeline, .sidebar {
+        width: 100%;
+    }
+
+    .tweet {
+        display: flex;
+        gap: 12px;
+    }
+}
+
+.like-btn {
+    transition: transform 0.2s;
+  }
+  
+  .like-btn.liked {
+    color: #e0245e;
+    transform: scale(1.2);
+  }
+  
+
+.like-btn:hover {
+    opacity: 0.8;
+}
+
+.skeleton {
+    height: 60px;
+    background: linear-gradient(90deg, #eee, #ddd, #eee);
+    animation: shimmer 1.2s infinite;
+  }
+
+
+  .left-sidebar {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    height: fit-content;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+
+.left-sidebar .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1da1f2;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.left-sidebar .menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.left-sidebar .menu li {
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.left-sidebar .menu li:hover {
+    background-color: #e8f5fd;
+}
+
+/* Cricket Match Cards */
+/* Cricket Matches Carousel - Full Width */
+.cricket-carousel-container {
+    width: 100%;
+    margin: 0;
+    padding: 20px 0;
+    background: linear-gradient(to bottom, rgba(29, 161, 242, 0.03), transparent);
+}
+
+.cricket-section-header {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cricket-section-header h2 {
+    color: #14171a;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+body.dark .cricket-section-header h2 {
+    color: #e7e9ea;
+}
+
+.carousel-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.carousel-btn {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ddb 100%);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    box-shadow: 0 3px 10px rgba(29, 161, 242, 0.3);
+}
+
+.carousel-btn:hover:not(:disabled) {
+    transform: scale(1.15);
+    box-shadow: 0 5px 15px rgba(29, 161, 242, 0.5);
+}
+
+.carousel-btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+.cricket-matches-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#cricket-matches {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 15px 20px 25px 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #1da1f2 #f0f0f0;
+}
+
+#cricket-matches::-webkit-scrollbar {
+    height: 10px;
+}
+
+#cricket-matches::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+    margin: 0 20px;
+}
+
+#cricket-matches::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ddb 100%);
+    border-radius: 10px;
+    border: 2px solid #f0f0f0;
+}
+
+#cricket-matches::-webkit-scrollbar-thumb:hover {
+    background: #0d8ddb;
+}
+
+body.dark #cricket-matches::-webkit-scrollbar-track {
+    background: #2f3336;
+}
+
+body.dark #cricket-matches::-webkit-scrollbar-thumb {
+    border-color: #2f3336;
+}
+
+/* Horizontal Cricket Match Cards */
+.cricket-match-card {
+    min-width: 340px;
+    max-width: 340px;
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+}
+
+.cricket-match-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #1da1f2, #0d8ddb);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.cricket-match-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+    border-color: rgba(29, 161, 242, 0.2);
+}
+
+.cricket-match-card:hover::before {
+    opacity: 1;
+}
+
+body.dark .cricket-match-card {
+    background: linear-gradient(145deg, #1a1f2e, #16181c);
+    color: #e7e9ea;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Live indicator animation */
+.cricket-match-card.live {
+    border: 2px solid #ff4444;
+    background: linear-gradient(145deg, #fff, #fff9f9);
+}
+
+body.dark .cricket-match-card.live {
+    background: linear-gradient(145deg, #2a1a1a, #1f1616);
+}
+
+.cricket-match-card.live::before {
+    opacity: 1;
+    background: linear-gradient(90deg, #ff4444, #ff6b6b);
+    animation: liveGlow 2s ease-in-out infinite;
+}
+
+@keyframes liveGlow {
+    0%, 100% { height: 5px; }
+    50% { height: 6px; }
+}
+
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f5f5f5;
+}
+
+body.dark .match-header {
+    border-bottom-color: #2f3336;
+}
+
+.match-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: #14171a;
+    line-height: 1.3;
+    flex: 1;
+    padding-right: 10px;
+}
+
+body.dark .match-title {
+    color: #e7e9ea;
+}
+
+.live-indicator {
+    background: linear-gradient(135deg, #ff4444, #ff6b6b);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: pulse 2s infinite;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1); 
+        box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
+    }
+    50% { 
+        opacity: 0.9; 
+        transform: scale(0.98); 
+        box-shadow: 0 2px 12px rgba(255, 68, 68, 0.6);
+    }
+}
+
+.completed-indicator {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.upcoming-indicator {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.match-series {
+    font-size: 12px;
+    color: #1da1f2;
+    font-weight: 700;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.match-time {
+    font-size: 12px;
+    color: #657786;
+    margin-bottom: 14px;
+    font-weight: 500;
+}
+
+body.dark .match-time {
+    color: #8899a6;
+}
+
+.match-teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 18px 0;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(29, 161, 242, 0.03), rgba(13, 141, 219, 0.03));
+    border-radius: 12px;
+}
+
+body.dark .match-teams {
+    background: linear-gradient(135deg, rgba(29, 161, 242, 0.08), rgba(13, 141, 219, 0.08));
+}
+
+.team {
+    flex: 1;
+    text-align: center;
+}
+
+.team-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #1da1f2;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.team-score {
+    font-size: 22px;
+    font-weight: 800;
+    color: #14171a;
+    font-family: 'Courier New', monospace;
+}
+
+body.dark .team-score {
+    color: #e7e9ea;
+}
+
+.vs {
+    font-size: 13px;
+    font-weight: 800;
+    color: #657786;
+    padding: 0 14px;
+    opacity: 0.7;
+}
+
+.match-status {
+    text-align: center;
+    color: #14171a;
+    font-size: 13px;
+    margin: 14px 0;
+    font-weight: 600;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+}
+
+body.dark .match-status {
+    color: #e7e9ea;
+}
+
+.match-venue {
+    font-size: 12px;
+    color: #657786;
+    text-align: center;
+    margin: 12px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+body.dark .match-venue {
+    color: #8899a6;
+}
+
+.view-details-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ddb 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s;
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.2);
+}
+
+.view-details-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(29, 161, 242, 0.4);
+    background: linear-gradient(135deg, #0d8ddb 0%, #1da1f2 100%);
+}
+
+.view-details-btn:active {
+    transform: translateY(0);
+}
+
+/* Loading State */
+.matches-loading {
+    display: flex;
+    gap: 24px;
+    padding: 15px 20px;
+}
+
+.match-skeleton {
+    min-width: 340px;
+    max-width: 340px;
+    height: 320px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 20px;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+body.dark .match-skeleton {
+    background: linear-gradient(90deg, #2a2a2a 25%, #333333 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cricket-match-card {
+        min-width: 300px;
+        max-width: 300px;
+    }
+    
+    .match-skeleton {
+        min-width: 300px;
+        max-width: 300px;
+    }
+    
+    .carousel-controls {
+        display: none;
+    }
+    
+    #cricket-matches {
+        padding: 15px 10px 25px 10px;
+        gap: 16px;
+    }
+}
+
+.match-hashtag {
+    font-size: 11px;
+    color: #1da1f2;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+    background: rgba(29, 161, 242, 0.1);
+    padding: 4px 8px;
+    border-radius: 8px;
+    display: inline-block;
+    width: 100%;
+}
+
+body.dark .match-hashtag {
+    background: rgba(29, 161, 242, 0.2);
+}
+
+.match-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.comments-btn,
+.tweet-match-btn {
+    flex: 1;
+    background: white;
+    color: #1da1f2;
+    border: 2px solid #1da1f2;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.comments-btn:hover {
+    background: #1da1f2;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
+}
+
+.tweet-match-btn:hover {
+    background: #1da1f2;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
+}
+
+body.dark .comments-btn,
+body.dark .tweet-match-btn {
+    background: transparent;
+    border-color: #1da1f2;
+    color: #1da1f2;
+}
+
+/* Modal for match comments */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s;
+}
+
+body.dark .modal-content {
+    background-color: #192734;
+    color: #e7e9ea;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+body.dark .modal-header {
+    border-bottom-color: #2f3336;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #14171a;
+    font-size: 22px;
+}
+
+body.dark .modal-header h2 {
+    color: #e7e9ea;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #657786;
+    transition: all 0.3s;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-modal:hover {
+    background: rgba(29, 161, 242, 0.1);
+    color: #1da1f2;
+    transform: rotate(90deg);
+}
+
+.tweet-form-modal {
+    background: #f0f8ff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+body.dark .tweet-form-modal {
+    background: rgba(29, 161, 242, 0.1);
+}
+
+.tweet-form-modal textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #1da1f2;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body.dark .tweet-form-modal textarea {
+    background: #192734;
+    color: #e7e9ea;
+    border-color: #1da1f2;
+}
+
+.tweet-form-modal button {
+    margin-top: 10px;
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ddb 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.tweet-form-modal button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.4);
+}
+
+.match-tweets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.no-tweets-message {
+    text-align: center;
+    color: #657786;
+    padding: 40px;
+    font-size: 16px;
+}
+
+/* Rest of your cricket card styles remain the same... */
+
+  
+
+
+
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Mini Twitter Clone</title>
@@ -9,16 +1150,43 @@
 
 <body>
     <header>
-        <h1>Mini Twitter Clone</h1>
-        <button id="theme-toggle">🌙 Dark Mode</button>
-
+        <div class="navbar-container">
+            <h1>🐦 Mini Twitter Clone</h1>
+            <div class="navbar-buttons">
+                <button id="theme-toggle">
+                    🌙 <span>Dark Mode</span>
+                </button>
+                <button onclick="logout()" class="logout-btn">
+                    🚪 <span>Logout</span>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
+    <!-- 🏏 CRICKET SCORES CAROUSEL - FULL WIDTH ABOVE EVERYTHING -->
+    <div class="cricket-carousel-container">
+        <div class="cricket-section-header">
+            <h2>🏏 Live Cricket Scores</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" id="prevBtn" onclick="scrollCarousel(-1)">‹</button>
+                <button class="carousel-btn" id="nextBtn" onclick="scrollCarousel(1)">›</button>
+            </div>
+        </div>
+        <div class="cricket-matches-wrapper">
+            <div id="cricket-matches">
+                <!-- Cricket match cards will appear here -->
+                <div class="matches-loading">
+                    <div class="match-skeleton"></div>
+                    <div class="match-skeleton"></div>
+                    <div class="match-skeleton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="container">
         <div class="left-sidebar">
             <div class="logo">🐦 MiniTwitter</div>
-        
             <ul class="menu">
                 <li onclick="loadTweets()">🏠 Home</li>
                 <li onclick="toggleDarkMode()">🌙 Dark Mode</li>
@@ -29,26 +1197,23 @@
         
         <!-- Timeline Feed -->
         <div class="timeline">
-          <!-- Create Tweet -->
-          <div class="create-tweet">
-              <input type="text" id="user" placeholder="Your username">
-              <textarea id="content" placeholder="What's happening?"></textarea>
-              <button onclick="postTweet()">Tweet</button>
-          </div>
-      
-          <!-- Filter by Username -->
-          <div class="filter-tweets">
-              <input type="text" id="filter-user" placeholder="Filter tweets by username">
-              <button onclick="loadTweetsByUser(document.getElementById('filter-user').value)">Search</button>
-          </div>
-      
-          <h2>Timeline</h2>
-          <div id="tweets">
-              <!-- Tweets will appear here -->
-               
-          </div>
-      </div>
-      
+            <!-- Create Tweet -->
+            <div class="create-tweet">
+                <textarea id="content" placeholder="What's happening?"></textarea>
+                <button onclick="postTweet()">Tweet</button>
+            </div>
+        
+            <!-- Filter by Username -->
+            <div class="filter-tweets">
+                <input type="text" id="filter-user" placeholder="Filter tweets by username">
+                <button onclick="loadTweetsByUser(document.getElementById('filter-user').value)">Search</button>
+            </div>
+        
+            <h2>Timeline</h2>
+            <div id="tweets">
+                <!-- Tweets will appear here -->
+            </div>
+        </div>
 
         <!-- Sidebar Users -->
         <div class="sidebar">
@@ -59,6 +1224,332 @@
         </div>
     </div>
 
+    <button class="floating-tweet-btn" onclick="scrollToTop()">＋</button>
+
     <script src="script.js"></script>
+    <script src="login.js"></script>
+
+    <script>
+        // ======================= CRICKET SCORES =======================
+        // ======================= CRICKET SCORES =======================
+let cricketRefreshInterval;
+
+async function loadCricketMatches() {
+    try {
+        const response = await fetch('http://127.0.0.1:8086/cricket/matches');
+        const data = await response.json();
+        
+        displayCricketMatches(data.matches);
+    } catch (error) {
+        console.error('Failed to load cricket matches:', error);
+        document.getElementById('cricket-matches').innerHTML = 
+            '<p style="padding: 40px; text-align: center; color: #666;">Unable to load matches</p>';
+    }
+}
+
+function displayCricketMatches(matches) {
+    const container = document.getElementById('cricket-matches');
+    if (!container) return;
+    
+    if (!matches || matches.length === 0) {
+        container.innerHTML = '<p style="padding: 40px; text-align: center; color: #666;">No matches available</p>';
+        return;
+    }
+    
+    // Sort: Live first, then completed, then upcoming
+    const sortedMatches = matches.sort((a, b) => {
+        const stateOrder = { 
+            'In Progress': 0, 
+            'Innings Break': 0, 
+            'Complete': 1, 
+            'Preview': 2, 
+            'Upcoming': 2 
+        };
+        const stateA = stateOrder[a.state] ?? 3;
+        const stateB = stateOrder[b.state] ?? 3;
+        
+        if (stateA !== stateB) return stateA - stateB;
+        return (b.timestamp || 0) - (a.timestamp || 0);
+    });
+    
+    container.innerHTML = '';
+    
+    sortedMatches.forEach(match => {
+        const matchCard = createMatchCard(match);
+        container.appendChild(matchCard);
+    });
+}
+
+function createMatchCard(match) {
+    const card = document.createElement('div');
+    
+    const state = match.state || '';
+    const isLive = state === 'In Progress' || state === 'Innings Break';
+    const isCompleted = state === 'Complete';
+    const isUpcoming = state === 'Preview' || state === 'Upcoming';
+    
+    card.className = 'cricket-match-card fade-in';
+    if (isLive) card.classList.add('live');
+    
+    let statusBadge = '';
+    if (isLive) {
+        statusBadge = '<span class="live-indicator">🔴 LIVE</span>';
+    } else if (isCompleted) {
+        statusBadge = '<span class="completed-indicator">✅ ENDED</span>';
+    } else {
+        statusBadge = '<span class="upcoming-indicator">🕐 UPCOMING</span>';
+    }
+    
+    const matchDate = match.timestamp ? new Date(match.timestamp * 1000) : null;
+    const timeAgo = matchDate ? getTimeAgo(matchDate) : '';
+    const matchHashtag = generateMatchHashtag(match);
+    
+    card.innerHTML = `
+        <div class="match-header">
+            <div class="match-title">${match.name || 'Cricket Match'}</div>
+            ${statusBadge}
+        </div>
+        <div class="match-series">${match.series || match.matchType || ''}</div>
+        ${matchHashtag ? `<div class="match-hashtag">#${matchHashtag}</div>` : ''}
+        ${timeAgo ? `<div class="match-time">${timeAgo}</div>` : ''}
+        <div class="match-teams">
+            <div class="team">
+                <div class="team-name">${match.teams?.[0] || 'Team 1'}</div>
+                <div class="team-score">${match.score?.[0]?.inning || '-'}</div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team">
+                <div class="team-name">${match.teams?.[1] || 'Team 2'}</div>
+                <div class="team-score">${match.score?.[1]?.inning || '-'}</div>
+            </div>
+        </div>
+        <div class="match-status">${match.status || 'Scheduled'}</div>
+        <div class="match-venue">📍 ${match.venue || 'Venue TBA'}</div>
+        <div class="match-actions">
+            <button onclick="viewMatchComments('${matchHashtag}', '${match.name}')" class="comments-btn">
+                💬 Comments
+            </button>
+            <button onclick="tweetAboutMatch('${matchHashtag}', '${match.name}')" class="tweet-match-btn">
+                🐦 Tweet
+            </button>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Carousel scroll function
+function scrollCarousel(direction) {
+    const container = document.getElementById('cricket-matches');
+    const scrollAmount = 320; // card width + gap
+    
+    container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+async function viewMatchDetails(matchId) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8086/cricket/match/${matchId}`);
+        const matchData = await response.json();
+        
+        alert(`Match Details:\n${JSON.stringify(matchData, null, 2)}`);
+    } catch (error) {
+        console.error('Failed to load match details:', error);
+    }
+}
+
+function getTimeAgo(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    
+    if (diffMins < 1) {
+        return '🔴 Live now';
+    } else if (diffMins < 60) {
+        return diffMins === 1 ? '1 minute ago' : `${diffMins} minutes ago`;
+    } else if (diffHours < 24) {
+        return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
+    } else {
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+}
+
+function startCricketRefresh() {
+    loadCricketMatches();
+    cricketRefreshInterval = setInterval(loadCricketMatches, 300000); // 5 minutes
+}
+
+function stopCricketRefresh() {
+    if (cricketRefreshInterval) {
+        clearInterval(cricketRefreshInterval);
+    }
+}
+
+// Helper function to generate match hashtag
+function generateMatchHashtag(match) {
+    if (!match.teams || match.teams.length < 2) return null;
+    
+    // Get first 3 letters of each team, uppercase
+    const team1 = match.teams[0].substring(0, 3).toUpperCase();
+    const team2 = match.teams[1].substring(0, 3).toUpperCase();
+    
+    return `${team1}vs${team2}`;
+}
+
+// View comments for a specific match
+async function viewMatchComments(matchHashtag, matchName) {
+    if (!matchHashtag) {
+        alert('Unable to load comments for this match');
+        return;
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'modal show';
+    modal.id = 'match-modal';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💬 ${matchName}</h2>
+                <button class="close-modal" onclick="closeMatchModal()">×</button>
+            </div>
+            
+            <div class="tweet-form-modal">
+                <textarea id="match-tweet-content" placeholder="Share your thoughts about this match... #${matchHashtag}"></textarea>
+                <button onclick="postMatchTweet('${matchHashtag}')">Post Comment</button>
+            </div>
+            
+            <div class="match-tweets-list" id="match-tweets">
+                <p style="text-align: center; color: #657786;">Loading comments...</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Load tweets for this match
+    loadMatchTweets(matchHashtag);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeMatchModal();
+        }
+    });
+}
+
+// Tweet about a specific match (just opens the modal)
+function tweetAboutMatch(matchHashtag, matchName) {
+    viewMatchComments(matchHashtag, matchName);
+}
+
+// Close match modal
+function closeMatchModal() {
+    const modal = document.getElementById('match-modal');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    }
+}
+
+// Load tweets for a specific match
+async function loadMatchTweets(matchHashtag) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://127.0.0.1:8086/tweet/match/${matchHashtag}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load tweets');
+        }
+        
+        const tweets = await response.json();
+        displayMatchTweets(tweets, matchHashtag);
+    } catch (error) {
+        console.error('Failed to load match tweets:', error);
+        document.getElementById('match-tweets').innerHTML = 
+            '<p class="no-tweets-message">Unable to load comments</p>';
+    }
+}
+
+// Display tweets for a match
+function displayMatchTweets(tweets, matchHashtag) {
+    const container = document.getElementById('match-tweets');
+    
+    if (!tweets || tweets.length === 0) {
+        container.innerHTML = `
+            <p class="no-tweets-message">
+                No comments yet. Be the first to share your thoughts!<br>
+                <span style="font-size: 14px; color: #1da1f2;">#${matchHashtag}</span>
+            </p>
+        `;
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    tweets.reverse().forEach(tweet => {
+        const tweetElement = generateTweetHTML(tweet);
+        container.innerHTML += tweetElement;
+    });
+}
+
+// Post a tweet about a match
+async function postMatchTweet(matchHashtag) {
+    const content = document.getElementById('match-tweet-content').value;
+    const token = localStorage.getItem('token');
+    
+    if (!content.trim()) {
+        alert('Please enter some content!');
+        return;
+    }
+    
+    try {
+        const response = await fetch('http://127.0.0.1:8086/tweet/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+                content: content,
+                match_hashtag: matchHashtag
+            })
+        });
+
+        if (response.status === 401) {
+            alert('Session expired. Please login again.');
+            logout();
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Clear the input
+        document.getElementById('match-tweet-content').value = '';
+        
+        // Reload match tweets
+        loadMatchTweets(matchHashtag);
+        
+        // Also reload main timeline
+        loadTweets();
+    } catch (err) {
+        console.error('Failed to post tweet:', err);
+        alert('Failed to post comment. Please try again.');
+    }
+}
+
+startCricketRefresh();
+        </script>
+
 </body>
 </html>
