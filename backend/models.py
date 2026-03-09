@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from database import Base
+
 
 
 class User(Base):
@@ -19,6 +20,11 @@ class TweetDB(Base):
     user = Column(String, index=True)
     content = Column(String)
     match_hashtag = Column(String, index=True, nullable=True)
+     # Sentiment fields
+    sentiment = Column(String, nullable=True)  # positive, negative, neutral
+    sentiment_score = Column(Float, nullable=True)  # -1 to 1
+
+
     liked_by = relationship("TweetLike", back_populates="tweet", cascade="all, delete")
 
 
