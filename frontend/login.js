@@ -2,23 +2,23 @@ let isRegisterMode = false;
 
 function toggleMode() {
     isRegisterMode = !isRegisterMode;
-    const emailField = document.getElementById('email');
+    const emailGroup = document.getElementById('email-group');
     const formTitle = document.getElementById('form-title');
     const loginBtn = document.getElementById('login-btn');
     const toggleBtn = document.getElementById('toggle-btn');
     const errorMsg = document.getElementById('error');
     
-    errorMsg.textContent = ''; // Clear any errors
+    errorMsg.textContent = '';
     
     if (isRegisterMode) {
-        emailField.style.display = 'block';
-        formTitle.textContent = 'Register';
-        loginBtn.textContent = 'Create Account';
+        emailGroup.style.display = 'block';
+        formTitle.textContent = 'Create Account';
+        loginBtn.textContent = 'Register';
         loginBtn.onclick = register;
         toggleBtn.textContent = 'Already have an account? Login';
     } else {
-        emailField.style.display = 'none';
-        formTitle.textContent = 'Login';
+        emailGroup.style.display = 'none';
+        formTitle.textContent = 'Welcome Back';
         loginBtn.textContent = 'Login';
         loginBtn.onclick = login;
         toggleBtn.textContent = 'Need an account? Register';
@@ -29,14 +29,20 @@ async function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const errorMsg = document.getElementById('error');
+    const loginBtn = document.getElementById('login-btn');
     
     if (!username || !password) {
         errorMsg.textContent = 'Please enter username and password';
         return;
     }
     
+    // Add loading state
+    loginBtn.classList.add('loading');
+    loginBtn.textContent = 'Logging in...';
+    errorMsg.textContent = '';
+    
     try {
-        const response = await fetch('http://127.0.0.1:8086/auth/login', {
+        const response = await fetch('/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,12 +56,22 @@ async function login() {
             throw new Error(data.detail || 'Login failed');
         }
 
-        // Store token and redirect
         localStorage.setItem('token', data.access_token);
-        window.location.href = 'index.html';
+        
+        // Show success and redirect
+        errorMsg.className = 'success-message';
+        errorMsg.textContent = '✓ Login successful! Redirecting...';
+        
+        setTimeout(() => {
+            window.location.href = '/index.html';
+        }, 500);
     } catch (error) {
         console.error('Login error:', error);
+        errorMsg.className = '';
         errorMsg.textContent = error.message;
+    } finally {
+        loginBtn.classList.remove('loading');
+        loginBtn.textContent = isRegisterMode ? 'Register' : 'Login';
     }
 }
 
@@ -64,16 +80,21 @@ async function register() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const errorMsg = document.getElementById('error');
+    const loginBtn = document.getElementById('login-btn');
     
     if (!username || !email || !password) {
         errorMsg.textContent = 'Please fill in all fields';
         return;
     }
     
+    loginBtn.classList.add('loading');
+    loginBtn.textContent = 'Creating account...';
+    errorMsg.textContent = '';
+    
     try {
         console.log('Attempting registration with:', { username, email });
         
-        const response = await fetch('http://127.0.0.1:8086/auth/register', {
+        const response = await fetch('/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,7 +106,6 @@ async function register() {
         console.log('Server response:', data);
 
         if (!response.ok) {
-            // Handle validation errors properly
             if (Array.isArray(data.detail)) {
                 const errors = data.detail.map(err => {
                     return `${err.loc?.join('.')}: ${err.msg}`;
@@ -98,15 +118,25 @@ async function register() {
             }
         }
 
-        alert('Registration successful! Please login.');
-        toggleMode(); // Switch back to login mode
+        // Show success
+        errorMsg.className = 'success-message';
+        errorMsg.textContent = '✓ Account created! Switching to login...';
         
-        // Clear the form
+        // Clear form
         document.getElementById('username').value = '';
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
+        
+        // Switch to login mode after 1.5 seconds
+        setTimeout(() => {
+            toggleMode();
+        }, 1500);
     } catch (error) {
         console.error('Registration failed:', error);
+        errorMsg.className = '';
         errorMsg.textContent = error.message;
+    } finally {
+        loginBtn.classList.remove('loading');
+        loginBtn.textContent = 'Register';
     }
 }

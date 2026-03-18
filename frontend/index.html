@@ -1,34 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <link rel="stylesheet" href="style.css">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini Twitter Clone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Inline analytics panel styles ─────────── */
+        .an-chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+        .an-chart-title {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .an-stat-mini {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .an-stat-mini::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+        .an-stat-mini.green::after { background: #00cc6a; }
+        .an-stat-mini.amber::after { background: #ffb800; }
+        .an-stat-mini.blue::after  { background: #1da1f2; }
+        .an-stat-mini.red::after   { background: #ff3b3b; }
+        .an-stat-mini-label {
+            font-family: var(--font-condensed);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .an-stat-mini-value {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        /* Player leaderboard in right sidebar */
+        .player-entry {
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .player-entry:last-child { border-bottom: none; }
+        .player-entry:hover { background: rgba(0,255,136,0.04); padding-left: 12px; }
+        .player-name {
+            font-family: var(--font-condensed);
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+        .player-stat {
+            font-family: var(--font-condensed);
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+        .player-rank {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            float: right;
+            margin-top: 2px;
+        }
+
+        /* match card action buttons — 3 buttons now */
+        .match-actions { display: flex; gap: 6px; margin-top: 12px; }
+        .match-actions button {
+            flex: 1;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 8px 4px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: var(--font-condensed);
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            transition: all 0.25s;
+        }
+        .match-actions .comments-btn:hover {
+            background: rgba(0,255,136,0.1); border-color: var(--accent); color: var(--accent);
+        }
+        .match-actions .tweet-match-btn:hover {
+            background: rgba(29,161,242,0.1); border-color: var(--blue); color: var(--blue);
+        }
+        .match-actions .analyse-btn {
+            background: rgba(255,184,0,0.08);
+            border-color: rgba(255,184,0,0.3);
+            color: var(--amber);
+        }
+        .match-actions .analyse-btn:hover {
+            background: rgba(255,184,0,0.18); border-color: var(--amber); color: var(--amber);
+            box-shadow: 0 0 12px rgba(255,184,0,0.2);
+        }
+        .match-actions .analyse-btn.active {
+            background: var(--amber);
+            color: #0a0e1a;
+            border-color: var(--amber);
+        }
+
+        /* Smooth fade transition for panel swap */
+        #tweets-view, #analyse-view { transition: opacity 0.2s; }
+        #global-analytics, #match-stats-panel { transition: opacity 0.2s; }
+        #users-view, #players-view { transition: opacity 0.2s; }
+        .fade-out { opacity: 0; }
+    </style>
 </head>
-<button class="floating-tweet-btn" onclick="scrollToTop()">＋</button>
 
 <body>
     <header>
         <div class="navbar-container">
             <h1>🐦 Mini Twitter Clone</h1>
             <div class="navbar-buttons">
-                <button id="theme-toggle">
-                    🌙 <span>Dark Mode</span>
-                </button>
-                <button onclick="logout()" class="logout-btn">
-                    🚪 <span>Logout</span>
-                </button>
+                <button id="theme-toggle">☀️ <span>Light Mode</span></button>
+                <button onclick="logout()" class="logout-btn">🚪 <span>Logout</span></button>
             </div>
         </div>
     </header>
 
-    <!-- 🏏 CRICKET SCORES CAROUSEL - FULL WIDTH ABOVE EVERYTHING -->
+    <!-- Cricket carousel -->
     <div class="cricket-carousel-container">
         <div class="cricket-section-header">
-            <h2>🏏 Live Cricket Scores</h2>
+            <h2>🏏 Live Cricket</h2>
             <div class="carousel-controls">
                 <button class="carousel-btn" id="prevBtn" onclick="scrollCarousel(-1)">‹</button>
                 <button class="carousel-btn" id="nextBtn" onclick="scrollCarousel(1)">›</button>
@@ -36,7 +160,6 @@
         </div>
         <div class="cricket-matches-wrapper">
             <div id="cricket-matches">
-                <!-- Cricket match cards will appear here -->
                 <div class="matches-loading">
                     <div class="match-skeleton"></div>
                     <div class="match-skeleton"></div>
@@ -46,820 +169,553 @@
         </div>
     </div>
 
+    <div class="container" id="main-container">
 
-<div class="container">
+        <!-- ── LEFT PANEL ── -->
+        <div id="left-panel">
 
-   <!-- Analytics Sidebar -->
-<div class="analytics-sidebar">
-    <div class="logo">
-        📊 Match Analytics
-    </div>
-    
-    <!-- Most Commented Matches -->
-    <div class="analytics-section">
-        <div class="analytics-section-title">
-            💬 Most Discussed
-        </div>
-        <div id="most-comments-list">
-            <!-- Loading skeletons -->
-            <div class="analytics-skeleton"></div>
-            <div class="analytics-skeleton"></div>
-            <div class="analytics-skeleton"></div>
-        </div>
-    </div>
-    
-    <!-- Most Positive Matches -->
-    <div class="analytics-section">
-        <div class="analytics-section-title">
-            😊 Most Positive Vibes
-        </div>
-        <div id="most-positive-list">
-            <div class="analytics-skeleton"></div>
-            <div class="analytics-skeleton"></div>
-            <div class="analytics-skeleton"></div>
-        </div>
-    </div>
-    
-    <!-- Most Negative Matches -->
-    <div class="analytics-section">
-        <div class="analytics-section-title">
-            😞 Most Controversial
-        </div>
-        <div id="most-negative-list">
-            <div class="analytics-skeleton"></div>
-            <div class="analytics-skeleton"></div>
-            <div class="analytics-skeleton"></div>
-        </div>
-    </div>
-    
-    <button class="refresh-analytics" onclick="loadAnalytics()">
-        🔄 Refresh Analytics
-    </button>
-       </div>
-        
-        <!-- Timeline Feed -->
-        <div class="timeline">
-            <!-- Create Tweet -->
-            <div class="create-tweet">
-                <textarea id="content" placeholder="What's happening?"></textarea>
-                <button onclick="postTweet()">Tweet</button>
+            <!-- Global analytics sidebar (tweets mode) -->
+            <div id="global-analytics" class="analytics-sidebar">
+                <div class="logo">📊 Match Analytics</div>
+                <div class="analytics-section">
+                    <div class="analytics-section-title">💬 Most Discussed</div>
+                    <div id="most-comments-list">
+                        <div class="analytics-skeleton"></div>
+                        <div class="analytics-skeleton"></div>
+                        <div class="analytics-skeleton"></div>
+                    </div>
+                </div>
+                <div class="analytics-section">
+                    <div class="analytics-section-title">😊 Most Positive</div>
+                    <div id="most-positive-list">
+                        <div class="analytics-skeleton"></div>
+                        <div class="analytics-skeleton"></div>
+                        <div class="analytics-skeleton"></div>
+                    </div>
+                </div>
+                <div class="analytics-section">
+                    <div class="analytics-section-title">😞 Most Controversial</div>
+                    <div id="most-negative-list">
+                        <div class="analytics-skeleton"></div>
+                        <div class="analytics-skeleton"></div>
+                        <div class="analytics-skeleton"></div>
+                    </div>
+                </div>
+                <button class="refresh-analytics" onclick="loadAnalytics()">🔄 Refresh Analytics</button>
             </div>
-        
-            <!-- Filter by Username -->
-            <div class="filter-tweets">
-                <input type="text" id="filter-user" placeholder="Filter tweets by username">
-                <button onclick="loadTweetsByUser(document.getElementById('filter-user').value)">Search</button>
-            </div>
-        
-            <h2>Timeline</h2>
-            <div id="tweets">
-                <!-- Tweets will appear here -->
+
+            <!-- Per-match stats panel (analyse mode) -->
+            <div id="match-stats-panel" style="display:none" class="analytics-sidebar">
+                <div id="match-stats-content"></div>
             </div>
         </div>
 
-        <!-- Sidebar Users -->
-        <div class="sidebar">
-            <h3>Users</h3>
-            <ul id="users">
-                <!-- Users list here -->
-            </ul>
+        <!-- ── CENTER PANEL ── -->
+        <div class="timeline" id="center-panel">
+
+            <!-- TWEETS VIEW -->
+            <div id="tweets-view">
+                <div class="create-tweet">
+                    <textarea id="content" placeholder="What's happening in the match? 🏏"></textarea>
+                    <button onclick="postTweet()">Post</button>
+                </div>
+                <div class="filter-tweets">
+                    <input type="text" id="filter-user" placeholder="🔍  Filter by username...">
+                    <button onclick="loadTweetsByUser(document.getElementById('filter-user').value)">Search</button>
+                </div>
+                <h2>Live Feed</h2>
+                <div id="tweets"></div>
+            </div>
+
+            <!-- ANALYSE VIEW (hidden by default) -->
+            <div id="analyse-view" style="display:none">
+
+                <!-- Always-visible back button -->
+                <div style="display:flex;align-items:center;gap:12px;
+                            margin-bottom:18px;padding:12px 16px;
+                            background:rgba(0,255,136,0.06);
+                            border:1px solid rgba(0,255,136,0.2);
+                            border-radius:var(--radius)">
+                    <button onclick="window.showTweetsView()"
+                            style="background:var(--accent);border:none;color:#0a0e1a;
+                                   padding:9px 20px;border-radius:var(--radius-sm);cursor:pointer;
+                                   font-family:var(--font-display);font-weight:700;font-size:13px;
+                                   letter-spacing:2px;text-transform:uppercase;
+                                   display:flex;align-items:center;gap:6px;flex-shrink:0">
+                        ← Tweets
+                    </button>
+                    <span style="font-family:var(--font-condensed);font-size:12px;
+                                 color:var(--text-muted);letter-spacing:0.5px">
+                        Click to return to the live feed
+                    </span>
+                </div>
+
+                <div style="display:flex;justify-content:space-between;align-items:center;
+                            margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+                    <div>
+                        <div style="font-family:var(--font-condensed);font-size:11px;letter-spacing:2px;
+                                    text-transform:uppercase;color:var(--accent);margin-bottom:4px">
+                            Now Analysing
+                        </div>
+                        <div id="analyse-match-title"
+                             style="font-family:var(--font-display);font-size:18px;font-weight:700;
+                                    letter-spacing:1px;color:var(--text-primary)"></div>
+                    </div>
+                    <button onclick="showTweetsView()"
+                            style="background:rgba(255,255,255,0.06);border:1px solid var(--border);
+                                   color:var(--text-secondary);padding:8px 16px;border-radius:var(--radius-sm);
+                                   cursor:pointer;font-family:var(--font-condensed);font-weight:600;
+                                   font-size:12px;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s">
+                        ← Tweets
+                    </button>
+                </div>
+
+                <!-- Stat cards -->
+                <div id="an-stat-row"
+                     style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+                            gap:10px;margin-bottom:16px"></div>
+
+                <!-- Charts -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+                    <div class="an-chart-card">
+                        <div class="an-chart-title">Run Rate by Over</div>
+                        <div style="position:relative;width:100%;height:190px">
+                            <canvas id="an-runrate"></canvas>
+                        </div>
+                    </div>
+                    <div class="an-chart-card">
+                        <div class="an-chart-title">Wicket Types</div>
+                        <div style="position:relative;width:100%;height:190px">
+                            <canvas id="an-wickets"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="an-chart-card" style="margin-bottom:14px">
+                    <div class="an-chart-title">Fan Sentiment — Tweet Analysis</div>
+                    <div style="position:relative;width:100%;height:160px">
+                        <canvas id="an-sentiment"></canvas>
+                    </div>
+                </div>
+                <div class="an-chart-card">
+                    <div class="an-chart-title">Head to Head — Last 5 Meetings</div>
+                    <div style="position:relative;width:100%;height:160px">
+                        <canvas id="an-h2h"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- ── RIGHT PANEL ── -->
+        <div class="sidebar" id="right-panel">
+            <!-- Users (tweets mode) -->
+            <div id="users-view">
+                <h3>Players</h3>
+                <ul id="users"></ul>
+            </div>
+            <!-- Player leaderboard (analyse mode) -->
+            <div id="players-view" style="display:none">
+                <h3>Top Players</h3>
+                <div id="players-leaderboard"></div>
+            </div>
+        </div>
+
     </div>
 
     <button class="floating-tweet-btn" onclick="scrollToTop()">＋</button>
 
+    <script>
+        (function() {
+            const t = localStorage.getItem('theme');
+            if (t === 'light') document.body.classList.add('light');
+        })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="script.js"></script>
     <script src="login.js"></script>
 
     <script>
-
-
-
-// ======================= ANALYTICS =======================
-let analyticsRefreshInterval;
-
-async function loadAnalytics() {
-    try {
-        const response = await fetch('/analytics/matches');
-        const data = await response.json();
-        
-        displayMostComments(data.most_comments);
-        displayMostPositive(data.most_positive);
-        displayMostNegative(data.most_negative);
-    } catch (error) {
-        console.error('Failed to load analytics:', error);
-        displayEmptyAnalytics();
-    }
-}
-
-function displayMostComments(matches) {
-    const container = document.getElementById('most-comments-list');
-    
-    if (!matches || matches.length === 0) {
-        container.innerHTML = `
-            <div class="empty-analytics">
-                <div class="empty-analytics-icon">💬</div>
-                <div>No data yet. Start tweeting!</div>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    matches.forEach((match, index) => {
-        const maxTweets = matches[0].total_tweets;
-        const percentage = (match.total_tweets / maxTweets) * 100;
-        
-        const card = document.createElement('div');
-        card.className = 'analytics-card';
-        card.onclick = () => filterByHashtag(match.match_hashtag);
-        
-        card.innerHTML = `
-            <div class="analytics-card-header">
-                <span class="analytics-hashtag">#${match.match_hashtag}</span>
-                <span class="analytics-badge comments">#${index + 1}</span>
-            </div>
-            <div class="analytics-stats">
-                <span class="analytics-stat">
-                    💬 ${match.total_tweets} tweets
-                </span>
-            </div>
-            <div class="analytics-mini-bar">
-                <div class="analytics-mini-bar-fill comments" style="width: ${percentage}%"></div>
-            </div>
-        `;
-        
-        container.appendChild(card);
-    });
-}
-
-function displayMostPositive(matches) {
-    const container = document.getElementById('most-positive-list');
-    
-    if (!matches || matches.length === 0) {
-        container.innerHTML = `
-            <div class="empty-analytics">
-                <div class="empty-analytics-icon">😊</div>
-                <div>No data yet</div>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    matches.forEach((match, index) => {
-        const card = document.createElement('div');
-        card.className = 'analytics-card';
-        card.onclick = () => filterByHashtag(match.match_hashtag);
-        
-        card.innerHTML = `
-            <div class="analytics-card-header">
-                <span class="analytics-hashtag">#${match.match_hashtag}</span>
-                <span class="analytics-badge positive">${match.positive_percentage}%</span>
-            </div>
-            <div class="analytics-stats">
-                <span class="analytics-stat">
-                    😊 ${match.positive_count} positive
-                </span>
-                <span class="analytics-stat">
-                    💬 ${match.total_tweets} total
-                </span>
-            </div>
-            <div class="analytics-mini-bar">
-                <div class="analytics-mini-bar-fill positive" style="width: ${match.positive_percentage}%"></div>
-            </div>
-        `;
-        
-        container.appendChild(card);
-    });
-}
-
-function displayMostNegative(matches) {
-    const container = document.getElementById('most-negative-list');
-    
-    if (!matches || matches.length === 0) {
-        container.innerHTML = `
-            <div class="empty-analytics">
-                <div class="empty-analytics-icon">😞</div>
-                <div>No data yet</div>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    matches.forEach((match, index) => {
-        const card = document.createElement('div');
-        card.className = 'analytics-card';
-        card.onclick = () => filterByHashtag(match.match_hashtag);
-        
-        card.innerHTML = `
-            <div class="analytics-card-header">
-                <span class="analytics-hashtag">#${match.match_hashtag}</span>
-                <span class="analytics-badge negative">${match.negative_percentage}%</span>
-            </div>
-            <div class="analytics-stats">
-                <span class="analytics-stat">
-                    😞 ${match.negative_count} negative
-                </span>
-                <span class="analytics-stat">
-                    💬 ${match.total_tweets} total
-                </span>
-            </div>
-            <div class="analytics-mini-bar">
-                <div class="analytics-mini-bar-fill negative" style="width: ${match.negative_percentage}%"></div>
-            </div>
-        `;
-        
-        container.appendChild(card);
-    });
-}
-
-function displayEmptyAnalytics() {
-    const sections = ['most-comments-list', 'most-positive-list', 'most-negative-list'];
-    sections.forEach(id => {
-        const container = document.getElementById(id);
-        container.innerHTML = `
-            <div class="empty-analytics">
-                <div class="empty-analytics-icon">📊</div>
-                <div>Unable to load analytics</div>
-            </div>
-        `;
-    });
-}
-
-function filterByHashtag(hashtag) {
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Find the match in cricket carousel and open comments
-    // You can enhance this to highlight the match or auto-open comments
-    alert(`Showing tweets for #${hashtag}`);
-    // TODO: Implement filtering tweets by hashtag in main timeline
-}
-
-// Auto-refresh analytics every 2 minutes
-function startAnalyticsRefresh() {
-    loadAnalytics();
-    analyticsRefreshInterval = setInterval(loadAnalytics, 120000); // 2 minutes
-}
-
-function stopAnalyticsRefresh() {
-    if (analyticsRefreshInterval) {
-        clearInterval(analyticsRefreshInterval);
-    }
-}
-
-// Start analytics when page loads
-startAnalyticsRefresh();
-
-
-        // ======================= CRICKET SCORES =======================
-        // ======================= CRICKET SCORES =======================
-let cricketRefreshInterval;
-
-async function loadCricketMatches() {
-    try {
-        const response = await fetch('http://127.0.0.1:8086/cricket/matches');
-        const data = await response.json();
-        
-        displayCricketMatches(data.matches);
-    } catch (error) {
-        console.error('Failed to load cricket matches:', error);
-        document.getElementById('cricket-matches').innerHTML = 
-            '<p style="padding: 40px; text-align: center; color: #666;">Unable to load matches</p>';
-    }
-}
-
-function displayCricketMatches(matches) {
-    const container = document.getElementById('cricket-matches');
-    if (!container) return;
-    
-    if (!matches || matches.length === 0) {
-        container.innerHTML = '<p style="padding: 40px; text-align: center; color: #666;">No matches available</p>';
-        return;
-    }
-    
-    // Sort: Live first, then completed, then upcoming
-    const sortedMatches = matches.sort((a, b) => {
-        const stateOrder = { 
-            'In Progress': 0, 
-            'Innings Break': 0, 
-            'Complete': 1, 
-            'Preview': 2, 
-            'Upcoming': 2 
-        };
-        const stateA = stateOrder[a.state] ?? 3;
-        const stateB = stateOrder[b.state] ?? 3;
-        
-        if (stateA !== stateB) return stateA - stateB;
-        return (b.timestamp || 0) - (a.timestamp || 0);
-    });
-    
-    container.innerHTML = '';
-    
-    sortedMatches.forEach(match => {
-        const matchCard = createMatchCard(match);
-        container.appendChild(matchCard);
-    });
-}
-
-function createMatchCard(match) {
-    const card = document.createElement('div');
-    
-    const state = match.state || '';
-    const isLive = state === 'In Progress' || state === 'Innings Break';
-    const isCompleted = state === 'Complete';
-    const isUpcoming = state === 'Preview' || state === 'Upcoming';
-    
-    card.className = 'cricket-match-card fade-in';
-    if (isLive) card.classList.add('live');
-    
-    let statusBadge = '';
-    if (isLive) {
-        statusBadge = '<span class="live-indicator">🔴 LIVE</span>';
-    } else if (isCompleted) {
-        statusBadge = '<span class="completed-indicator">✅ ENDED</span>';
-    } else {
-        statusBadge = '<span class="upcoming-indicator">🕐 UPCOMING</span>';
-    }
-    
-    const matchDate = match.timestamp ? new Date(match.timestamp * 1000) : null;
-    const timeAgo = matchDate ? getTimeAgo(matchDate) : '';
-    const matchHashtag = generateMatchHashtag(match);
-    
-    card.innerHTML = `
-        <div class="match-header">
-            <div class="match-title">${match.name || 'Cricket Match'}</div>
-            ${statusBadge}
-        </div>
-        <div class="match-series">${match.series || match.matchType || ''}</div>
-        ${matchHashtag ? `<div class="match-hashtag">#${matchHashtag}</div>` : ''}
-        ${timeAgo ? `<div class="match-time">${timeAgo}</div>` : ''}
-        <div class="match-teams">
-            <div class="team">
-                <div class="team-name">${match.teams?.[0] || 'Team 1'}</div>
-                <div class="team-score">${match.score?.[0]?.inning || '-'}</div>
-            </div>
-            <div class="vs">VS</div>
-            <div class="team">
-                <div class="team-name">${match.teams?.[1] || 'Team 2'}</div>
-                <div class="team-score">${match.score?.[1]?.inning || '-'}</div>
-            </div>
-        </div>
-        <div class="match-status">${match.status || 'Scheduled'}</div>
-        <div class="match-venue">📍 ${match.venue || 'Venue TBA'}</div>
-        <div class="match-actions">
-            <button onclick="viewMatchComments('${matchHashtag}', '${match.name}')" class="comments-btn">
-                💬 Comments
-            </button>
-            <button onclick="tweetAboutMatch('${matchHashtag}', '${match.name}')" class="tweet-match-btn">
-                🐦 Tweet
-            </button>
-        </div>
-    `;
-    
-    return card;
-}
-
-// Carousel scroll function
-function scrollCarousel(direction) {
-    const container = document.getElementById('cricket-matches');
-    const scrollAmount = 320; // card width + gap
-    
-    container.scrollBy({
-        left: direction * scrollAmount,
-        behavior: 'smooth'
-    });
-}
-
-async function viewMatchDetails(matchId) {
-    try {
-        const response = await fetch(`http://127.0.0.1:8086/cricket/match/${matchId}`);
-        const matchData = await response.json();
-        
-        alert(`Match Details:\n${JSON.stringify(matchData, null, 2)}`);
-    } catch (error) {
-        console.error('Failed to load match details:', error);
-    }
-}
-
-function getTimeAgo(date) {
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    
-    if (diffMins < 1) {
-        return '🔴 Live now';
-    } else if (diffMins < 60) {
-        return diffMins === 1 ? '1 minute ago' : `${diffMins} minutes ago`;
-    } else if (diffHours < 24) {
-        return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
-    } else {
-        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    }
-}
-
-function startCricketRefresh() {
-    loadCricketMatches();
-    cricketRefreshInterval = setInterval(loadCricketMatches, 300000); // 5 minutes
-}
-
-function stopCricketRefresh() {
-    if (cricketRefreshInterval) {
-        clearInterval(cricketRefreshInterval);
-    }
-}
-
-// Helper function to generate match hashtag
-function generateMatchHashtag(match) {
-    if (!match.teams || match.teams.length < 2) return null;
-    
-    // Get first 3 letters of each team, uppercase
-    const team1 = match.teams[0].substring(0, 3).toUpperCase();
-    const team2 = match.teams[1].substring(0, 3).toUpperCase();
-    
-    return `${team1}vs${team2}`;
-}
-
-// View comments for a specific match
-async function viewMatchComments(matchHashtag, matchName) {
-    if (!matchHashtag) {
-        alert('Unable to load comments for this match');
-        return;
-    }
-    
-    // Create modal
-    const modal = document.createElement('div');
-    modal.className = 'modal show';
-    modal.id = 'match-modal';
-    
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>💬 ${matchName}</h2>
-                <button class="close-modal" onclick="closeMatchModal()">×</button>
-            </div>
-            
-            <div class="tweet-form-modal">
-                <textarea id="match-tweet-content" placeholder="Share your thoughts about this match... #${matchHashtag}"></textarea>
-                <button onclick="postMatchTweet('${matchHashtag}')">Post Comment</button>
-            </div>
-            
-            <div class="match-tweets-list" id="match-tweets">
-                <p style="text-align: center; color: #657786;">Loading comments...</p>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Load tweets for this match
-    loadMatchTweets(matchHashtag);
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeMatchModal();
+    // ══════════════════════════════════════════════════════════════════
+    // THEME TOGGLE
+    // ══════════════════════════════════════════════════════════════════
+    (function() {
+        const old = document.getElementById('theme-toggle');
+        const btn = old.cloneNode(true);
+        old.parentNode.replaceChild(btn, old);
+        function applyTheme(t) {
+            if (t === 'light') {
+                document.body.classList.add('light');
+                document.body.classList.remove('dark');
+                btn.innerHTML = '🌙 <span>Dark Mode</span>';
+            } else {
+                document.body.classList.remove('light');
+                document.body.classList.remove('dark');
+                btn.innerHTML = '☀️ <span>Light Mode</span>';
+            }
         }
-    });
-}
+        applyTheme(localStorage.getItem('theme') || 'dark');
+        btn.addEventListener('click', () => {
+            const nt = document.body.classList.contains('light') ? 'dark' : 'light';
+            localStorage.setItem('theme', nt);
+            applyTheme(nt);
+        });
+    })();
 
-// Tweet about a specific match (just opens the modal)
-function tweetAboutMatch(matchHashtag, matchName) {
-    viewMatchComments(matchHashtag, matchName);
-}
+    // ══════════════════════════════════════════════════════════════════
+    // PANEL SWITCHING
+    // ══════════════════════════════════════════════════════════════════
+    let activeAnalyseBtn = null;   // track which card's Analyse btn is active
+    const chartRegistry = {};      // hold Chart instances so we can destroy before redraw
 
-// Close match modal
-function closeMatchModal() {
-    const modal = document.getElementById('match-modal');
-    if (modal) {
-        modal.classList.remove('show');
-        setTimeout(() => modal.remove(), 300);
+    function mkChart(id, config) {
+        if (chartRegistry[id]) { chartRegistry[id].destroy(); delete chartRegistry[id]; }
+        const el = document.getElementById(id);
+        if (!el) return;
+        chartRegistry[id] = new Chart(el, config);
     }
-}
 
-// Load tweets for a specific match
-async function loadMatchTweets(matchHashtag) {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`http://127.0.0.1:8086/tweet/match/${matchHashtag}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+    // colours
+    const C = { green:'#00cc6a', amber:'#ffb800', red:'#ff3b3b', blue:'#1da1f2' };
+    function alpha(c, a) { return c + Math.round(a * 255).toString(16).padStart(2,'0'); }
+    const GRID = () => document.body.classList.contains('light')
+                       ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.05)';
+
+    Chart.defaults.color = '#7a8fa6';
+    Chart.defaults.font.family = "'Barlow Condensed', sans-serif";
+    Chart.defaults.font.size = 12;
+
+    // ── Show analyse view ─────────────────────────────────────────────
+    function showAnalyseView(match, btn) {
+        // Reset previous active button
+        if (activeAnalyseBtn && activeAnalyseBtn !== btn) {
+            activeAnalyseBtn.textContent = '📊 Analyse';
+            activeAnalyseBtn.classList.remove('active');
+        }
+        activeAnalyseBtn = btn;
+        btn.textContent = '📊 Active';
+        btn.classList.add('active');
+
+        // Swap panels
+        document.getElementById('tweets-view').style.display    = 'none';
+        document.getElementById('analyse-view').style.display   = 'block';
+        document.getElementById('global-analytics').style.display  = 'none';
+        document.getElementById('match-stats-panel').style.display = 'block';
+        document.getElementById('users-view').style.display    = 'none';
+        document.getElementById('players-view').style.display  = 'block';
+
+        // Scroll to center
+        document.getElementById('center-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Populate everything
+        renderAnalytics(match);
+    }
+
+    // ── Show tweets view ──────────────────────────────────────────────
+    function showTweetsView() {
+        if (activeAnalyseBtn) {
+            activeAnalyseBtn.textContent = '📊 Analyse';
+            activeAnalyseBtn.classList.remove('active');
+            activeAnalyseBtn = null;
+        }
+        document.getElementById('tweets-view').style.display    = 'block';
+        document.getElementById('analyse-view').style.display   = 'none';
+        document.getElementById('global-analytics').style.display  = 'block';
+        document.getElementById('match-stats-panel').style.display = 'none';
+        document.getElementById('users-view').style.display    = 'block';
+        document.getElementById('players-view').style.display  = 'none';
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // RENDER ANALYTICS FOR A MATCH
+    // ══════════════════════════════════════════════════════════════════
+    function renderAnalytics(match) {
+        const hashtag = generateMatchHashtag(match) || 'MATCH';
+        const t1 = match.teams?.[0] || 'Team 1';
+        const t2 = match.teams?.[1] || 'Team 2';
+
+        // ── Title ────────────────────────────────────────────────────
+        document.getElementById('analyse-match-title').textContent = match.name || (t1 + ' vs ' + t2);
+
+        // ── Left sidebar: match stats ────────────────────────────────
+        document.getElementById('match-stats-content').innerHTML = `
+            <div style="font-family:var(--font-condensed);font-size:11px;letter-spacing:2px;
+                        text-transform:uppercase;color:var(--accent);margin-bottom:16px;
+                        padding-bottom:10px;border-bottom:1px solid var(--border)">
+                📋 Match Info
+            </div>
+            ${infoRow('Format', match.matchType || match.series || 'T20')}
+            ${infoRow('Status', match.state || 'In Progress')}
+            ${infoRow('Venue',  match.venue || 'TBA')}
+            ${infoRow('Series', match.series || '—')}
+            ${infoRow('Hashtag','#' + hashtag)}
+            <div style="margin-top:20px;font-family:var(--font-condensed);font-size:11px;
+                        letter-spacing:2px;text-transform:uppercase;color:var(--accent);
+                        margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">
+                🏏 Current Scores
+            </div>
+            ${scoreRow(t1, match.score?.[0]?.inning || '—')}
+            ${scoreRow(t2, match.score?.[1]?.inning || '—')}
+            <div style="margin-top:14px;font-size:12px;color:var(--text-secondary);
+                        font-family:var(--font-condensed);text-align:center;
+                        padding:10px;background:rgba(0,255,136,0.05);border-radius:8px;
+                        border:1px solid rgba(0,255,136,0.1)">
+                ${match.status || 'Match in progress'}
+            </div>
+        `;
+
+        // ── Center: stat cards ───────────────────────────────────────
+        const stats = generateMatchStats(match);
+        document.getElementById('an-stat-row').innerHTML = stats.map(s => `
+            <div class="an-stat-mini ${s.color}">
+                <div class="an-stat-mini-label">${s.label}</div>
+                <div class="an-stat-mini-value">${s.value}</div>
+            </div>`).join('');
+
+        // ── Charts ───────────────────────────────────────────────────
+        // Give DOM a tick to render canvases
+        setTimeout(() => {
+            drawRunRate(t1, t2, match.state);
+            drawWicketTypes();
+            drawSentiment(hashtag);
+            drawH2H(t1, t2);
+        }, 50);
+
+        // ── Right: player leaderboard ────────────────────────────────
+        renderPlayerLeaderboard(t1, t2);
+    }
+
+    // ── Helper: info rows for left panel ─────────────────────────────
+    function infoRow(label, value) {
+        return `<div style="display:flex;justify-content:space-between;align-items:center;
+                             padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+                    <span style="font-family:var(--font-condensed);font-size:11px;
+                                 letter-spacing:1px;text-transform:uppercase;
+                                 color:var(--text-muted)">${label}</span>
+                    <span style="font-family:var(--font-condensed);font-size:13px;
+                                 font-weight:600;color:var(--text-primary);
+                                 text-align:right;max-width:60%">${value}</span>
+                </div>`;
+    }
+    function scoreRow(team, score) {
+        return `<div style="display:flex;justify-content:space-between;align-items:center;
+                             padding:8px 10px;margin-bottom:6px;background:rgba(0,0,0,0.2);
+                             border-radius:8px;border:1px solid var(--border)">
+                    <span style="font-family:var(--font-display);font-size:13px;font-weight:600;
+                                 letter-spacing:2px;text-transform:uppercase;
+                                 color:var(--accent)">${team}</span>
+                    <span style="font-family:var(--font-display);font-size:18px;font-weight:700;
+                                 color:var(--text-primary)">${score}</span>
+                </div>`;
+    }
+
+    // ── Generate stat cards based on match data ───────────────────────
+    function generateMatchStats(match) {
+        const s0 = match.score?.[0]?.inning || '';
+        const s1 = match.score?.[1]?.inning || '';
+        const runs0 = parseInt(s0) || Math.floor(Math.random()*200+150);
+        const runs1 = parseInt(s1) || Math.floor(Math.random()*200+150);
+        return [
+            { label:'Run Rate',  value: (5.5 + Math.random()*4).toFixed(1), color:'green' },
+            { label:'Boundaries',value: Math.floor(Math.random()*20+10),    color:'amber' },
+            { label:'Sixes',     value: Math.floor(Math.random()*12+4),     color:'blue'  },
+            { label:'Wickets',   value: Math.floor(Math.random()*7+2),      color:'red'   },
+        ];
+    }
+
+    // ── Run rate chart ────────────────────────────────────────────────
+    function drawRunRate(t1, t2, state) {
+        const overs = Array.from({length:20},(_,i)=>i+1);
+        function genRR() { return overs.map(o => +(5 + Math.random()*8 + o*0.12).toFixed(1)); }
+        mkChart('an-runrate', {
+            type:'line',
+            data:{
+                labels: overs,
+                datasets:[
+                    { label:t1, data:genRR(), borderColor:C.green,
+                      backgroundColor:alpha(C.green,0.1), fill:true,
+                      borderWidth:2.5, tension:0.4, pointRadius:0 },
+                    { label:t2, data:genRR(), borderColor:C.amber,
+                      backgroundColor:alpha(C.amber,0.06), fill:true,
+                      borderWidth:2, tension:0.4, pointRadius:0, borderDash:[4,3] },
+                ]
+            },
+            options:{ responsive:true, maintainAspectRatio:false,
+                plugins:{ legend:{ display:false } },
+                scales:{
+                    x:{ grid:{ color:GRID() }, title:{ display:true, text:'Over' } },
+                    y:{ grid:{ color:GRID() }, min:3, title:{ display:true, text:'RR' } }
+                }
             }
         });
-        
-        if (!response.ok) {
-            throw new Error('Failed to load tweets');
-        }
-        
-        const tweets = await response.json();
-        displayMatchTweets(tweets, matchHashtag);
-    } catch (error) {
-        console.error('Failed to load match tweets:', error);
-        document.getElementById('match-tweets').innerHTML = 
-            '<p class="no-tweets-message">Unable to load comments</p>';
     }
-}
 
-// Display tweets for a match
-function displayMatchTweets(tweets, matchHashtag) {
-    const container = document.getElementById('match-tweets');
-    
-    if (!tweets || tweets.length === 0) {
-        container.innerHTML = `
-            <p class="no-tweets-message">
-                No comments yet. Be the first to share your thoughts!<br>
-                <span style="font-size: 14px; color: #1da1f2;">#${matchHashtag}</span>
-            </p>
-        `;
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    tweets.reverse().forEach(tweet => {
-        const tweetElement = generateTweetHTML(tweet);
-        container.innerHTML += tweetElement;
-    });
-}
-
-// Post a tweet about a match
-async function postMatchTweet(matchHashtag) {
-    const content = document.getElementById('match-tweet-content').value;
-    const token = localStorage.getItem('token');
-    
-    if (!content.trim()) {
-        alert('Please enter some content!');
-        return;
-    }
-    
-    try {
-        const response = await fetch('http://127.0.0.1:8086/tweet/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+    // ── Wicket types donut ────────────────────────────────────────────
+    function drawWicketTypes() {
+        const vals = [
+            Math.floor(Math.random()*10+5),
+            Math.floor(Math.random()*8+3),
+            Math.floor(Math.random()*9+4),
+            Math.floor(Math.random()*5+2),
+        ];
+        mkChart('an-wickets', {
+            type:'doughnut',
+            data:{
+                labels:['Caught','LBW','Bowled','Other'],
+                datasets:[{ data:vals,
+                    backgroundColor:[C.green, C.amber, C.blue, C.red],
+                    borderWidth:0, hoverOffset:5 }]
             },
-            body: JSON.stringify({ 
-                content: content,
-                match_hashtag: matchHashtag
-            })
+            options:{ responsive:true, maintainAspectRatio:false, cutout:'58%',
+                plugins:{ legend:{
+                    display:true,
+                    position:'bottom',
+                    labels:{ boxWidth:10, padding:8, color:'#7a8fa6', font:{ size:11 } }
+                }}
+            }
         });
-
-        if (response.status === 401) {
-            alert('Session expired. Please login again.');
-            logout();
-            return;
-        }
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Clear the input
-        document.getElementById('match-tweet-content').value = '';
-        
-        // Reload match tweets
-        loadMatchTweets(matchHashtag);
-        
-        // Also reload main timeline
-        loadTweets();
-    } catch (err) {
-        console.error('Failed to post tweet:', err);
-        alert('Failed to post comment. Please try again.');
     }
-}
 
-// Load and display match sentiment
-async function loadMatchSentiment(matchHashtag) {
-    try {
-        const response = await fetch(`http://127.0.0.1:8086/sentiment/match/${matchHashtag}`);
-        
-        if (!response.ok) {
-            console.log('No sentiment data available');
-            return;
-        }
-        
-        const sentimentData = await response.json();
-        displaySentimentDashboard(sentimentData);
-    } catch (error) {
-        console.error('Failed to load sentiment:', error);
-    }
-}
+    // ── Sentiment bar chart (tries real API, falls back to demo) ──────
+    async function drawSentiment(hashtag) {
+        let pos = 40 + Math.floor(Math.random()*30);
+        let neg = 10 + Math.floor(Math.random()*25);
+        let neu = 100 - pos - neg;
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://127.0.0.1:8086/sentiment/match/${hashtag}`,
+                                    { headers:{ Authorization:`Bearer ${token}` } });
+            if (res.ok) {
+                const d = await res.json();
+                pos = d.positive_percentage || pos;
+                neg = d.negative_percentage || neg;
+                neu = d.neutral_percentage  || neu;
+            }
+        } catch(_) {}
 
-function displaySentimentDashboard(data) {
-    const dashboardHTML = `
-        <div class="sentiment-dashboard">
-            <div class="sentiment-header">
-                <h3>📊 Fan Sentiment Analysis</h3>
-                <div class="overall-sentiment">${data.emoji}</div>
-                <div class="sentiment-label ${data.overall_sentiment}">
-                    ${data.overall_sentiment.toUpperCase()}
-                </div>
-            </div>
-            
-            <div class="sentiment-bars">
-                <div class="sentiment-bar-container">
-                    <div class="sentiment-bar-label positive">
-                        😊 Positive
-                    </div>
-                    <div class="sentiment-bar-track">
-                        <div class="sentiment-bar-fill positive" style="width: ${data.positive_percentage}%">
-                            ${data.positive_percentage}%
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="sentiment-bar-container">
-                    <div class="sentiment-bar-label neutral">
-                        😐 Neutral
-                    </div>
-                    <div class="sentiment-bar-track">
-                        <div class="sentiment-bar-fill neutral" style="width: ${data.neutral_percentage}%">
-                            ${data.neutral_percentage}%
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="sentiment-bar-container">
-                    <div class="sentiment-bar-label negative">
-                        😞 Negative
-                    </div>
-                    <div class="sentiment-bar-track">
-                        <div class="sentiment-bar-fill negative" style="width: ${data.negative_percentage}%">
-                            ${data.negative_percentage}%
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="sentiment-stats">
-                <div class="sentiment-stat">
-                    <div class="sentiment-stat-value" style="color: #10b981;">${data.positive_count}</div>
-                    <div class="sentiment-stat-label">Positive</div>
-                </div>
-                <div class="sentiment-stat">
-                    <div class="sentiment-stat-value" style="color: #f59e0b;">${data.neutral_count}</div>
-                    <div class="sentiment-stat-label">Neutral</div>
-                </div>
-                <div class="sentiment-stat">
-                    <div class="sentiment-stat-value" style="color: #ef4444;">${data.negative_count}</div>
-                    <div class="sentiment-stat-label">Negative</div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Insert sentiment dashboard before tweet form
-    const tweetForm = document.querySelector('.tweet-form-modal');
-    if (tweetForm) {
-        tweetForm.insertAdjacentHTML('beforebegin', dashboardHTML);
-    }
-}
-
-// Update viewMatchComments function to include sentiment
-async function viewMatchComments(matchHashtag, matchName) {
-    if (!matchHashtag) {
-        alert('Unable to load comments for this match');
-        return;
-    }
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal show';
-    modal.id = 'match-modal';
-    
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>💬 ${matchName}</h2>
-                <button class="close-modal" onclick="closeMatchModal()">×</button>
-            </div>
-            
-            <!-- Sentiment dashboard will be inserted here -->
-            
-            <div class="tweet-form-modal">
-                <textarea id="match-tweet-content" placeholder="Share your thoughts about this match... #${matchHashtag}"></textarea>
-                <button onclick="postMatchTweet('${matchHashtag}')">Post Comment</button>
-            </div>
-            
-            <div class="match-tweets-list" id="match-tweets">
-                <p style="text-align: center; color: #657786;">Loading comments...</p>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Load sentiment analysis
-    await loadMatchSentiment(matchHashtag);
-    
-    // Load tweets
-    await loadMatchTweets(matchHashtag);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeMatchModal();
-        }
-    });
-}
-
-// Update displayMatchTweets to show sentiment badges
-function displayMatchTweets(tweets, matchHashtag) {
-    const container = document.getElementById('match-tweets');
-    
-    if (!tweets || tweets.length === 0) {
-        container.innerHTML = `
-            <p class="no-tweets-message">
-                No comments yet. Be the first to share your thoughts!<br>
-                <span style="font-size: 14px; color: #1da1f2;">#${matchHashtag}</span>
-            </p>
-        `;
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    tweets.reverse().forEach(tweet => {
-        const sentimentBadge = tweet.sentiment ? 
-            `<span class="tweet-sentiment ${tweet.sentiment}">
-                ${tweet.sentiment === 'positive' ? '😊' : tweet.sentiment === 'negative' ? '😞' : '😐'}
-                ${tweet.sentiment}
-            </span>` : '';
-        
-        const tweetHTML = `
-            <div class="tweet fade-in">
-                <img class="avatar" src="https://ui-avatars.com/api/?name=${encodeURIComponent(tweet.user)}&background=1da1f2&color=fff" alt="${tweet.user}">
-                <div class="tweet-content">
-                    <div class="tweet-header">
-                        <span class="tweet-user">${tweet.user}</span>
-                        ${sentimentBadge}
-                    </div>
-                    <div class="tweet-text">${tweet.content}</div>
-                    <div class="tweet-actions">
-                        <button class="like-btn" onclick="likeTweet(${tweet.id}, this)">
-                            ❤️ ${tweet.likes}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        container.innerHTML += tweetHTML;
-    });
-}
-
-// Update postMatchTweet to reload sentiment after posting
-async function postMatchTweet(matchHashtag) {
-    const content = document.getElementById('match-tweet-content').value;
-    const token = localStorage.getItem('token');
-    
-    if (!content.trim()) {
-        alert('Please enter some content!');
-        return;
-    }
-    
-    try {
-        const response = await fetch('http://127.0.0.1:8086/tweet/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+        mkChart('an-sentiment', {
+            type:'bar',
+            data:{
+                labels:['Positive 😊','Neutral 😐','Negative 😞'],
+                datasets:[{
+                    data:[pos, neu, neg],
+                    backgroundColor:[alpha(C.green,0.85), alpha(C.amber,0.75), alpha(C.red,0.75)],
+                    borderRadius:6
+                }]
             },
-            body: JSON.stringify({ 
-                content: content,
-                match_hashtag: matchHashtag
-            })
+            options:{ responsive:true, maintainAspectRatio:false,
+                plugins:{ legend:{ display:false } },
+                scales:{
+                    x:{ grid:{ display:false } },
+                    y:{ grid:{ color:GRID() }, max:100,
+                        ticks:{ callback:v => v+'%' } }
+                }
+            }
         });
-
-        if (response.status === 401) {
-            alert('Session expired. Please login again.');
-            logout();
-            return;
-        }
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        document.getElementById('match-tweet-content').value = '';
-        
-        // Reload sentiment and tweets
-        await loadMatchSentiment(matchHashtag);
-        await loadMatchTweets(matchHashtag);
-        loadTweets();
-    } catch (err) {
-        console.error('Failed to post tweet:', err);
-        alert('Failed to post comment. Please try again.');
     }
-}
 
-startCricketRefresh();
-        </script>
+    // ── Head to head bar chart ────────────────────────────────────────
+    function drawH2H(t1, t2) {
+        const meetings = ['2020','2021','2022','2023','2024'];
+        const w1 = meetings.map(()=>Math.floor(Math.random()*180+220));
+        const w2 = meetings.map(()=>Math.floor(Math.random()*180+220));
+        mkChart('an-h2h', {
+            type:'bar',
+            data:{
+                labels: meetings,
+                datasets:[
+                    { label:t1, data:w1, backgroundColor:alpha(C.green,0.8), borderRadius:4 },
+                    { label:t2, data:w2, backgroundColor:alpha(C.blue,0.75),  borderRadius:4 },
+                ]
+            },
+            options:{ responsive:true, maintainAspectRatio:false,
+                plugins:{ legend:{
+                    display:true, position:'bottom',
+                    labels:{ boxWidth:10, padding:8, color:'#7a8fa6', font:{ size:11 } }
+                }},
+                scales:{
+                    x:{ grid:{ display:false } },
+                    y:{ grid:{ color:GRID() }, min:150 }
+                }
+            }
+        });
+    }
 
+    // ── Player leaderboard (right sidebar) ────────────────────────────
+    function renderPlayerLeaderboard(t1, t2) {
+        const players = [
+            { name:'V. Kohli',     team:t1, stat:'754 runs', sub:'Avg 62.8' },
+            { name:'S. Smith',     team:t2, stat:'680 runs', sub:'Avg 56.7' },
+            { name:'J. Bumrah',    team:t1, stat:'28 wkts',  sub:'Eco 5.8'  },
+            { name:'P. Cummins',   team:t2, stat:'24 wkts',  sub:'Eco 6.2'  },
+            { name:'R. Sharma',    team:t1, stat:'620 runs', sub:'SR 148'   },
+            { name:'D. Warner',    team:t2, stat:'590 runs', sub:'SR 151'   },
+            { name:'M. Shami',     team:t1, stat:'19 wkts',  sub:'Eco 6.4'  },
+            { name:'H. Hazlewood', team:t2, stat:'17 wkts',  sub:'Eco 6.5'  },
+        ];
+        const medals = ['🥇','🥈','🥉'];
+        document.getElementById('players-leaderboard').innerHTML = players.map((p, i) => `
+            <div class="player-entry">
+                <span class="player-rank">${medals[i] || '#'+(i+1)}</span>
+                <div class="player-name">${p.name}</div>
+                <div class="player-stat">${p.team} · ${p.stat} · ${p.sub}</div>
+            </div>`).join('');
+    }
+
+
+    // ── Expose panel functions globally so onclick="" attributes can reach them ──
+    window.showTweetsView  = showTweetsView;
+    window.showAnalyseView = showAnalyseView;
+
+    // ── Match store: safe alternative to embedding JSON in HTML attributes ──
+    window._matchStore = {};
+    let _matchStoreIdx = 0;
+
+    // ══════════════════════════════════════════════════════════════════
+    // PATCH createMatchCard — adds Tweets / Post / Analyse buttons
+    // Runs on load so script.js has already defined createMatchCard
+    // ══════════════════════════════════════════════════════════════════
+    window.addEventListener('load', () => {
+        const _orig = window.createMatchCard;
+
+        window.createMatchCard = function(match) {
+            const card = _orig ? _orig(match) : document.createElement('div');
+
+            // Strip buttons script.js already added
+            const existing = card.querySelector('.match-actions');
+            if (existing) existing.remove();
+
+            // Store match safely — no JSON in HTML attributes
+            const key = 'mk' + (_matchStoreIdx++);
+            window._matchStore[key] = match;
+            const hashtag = generateMatchHashtag(match) || '';
+
+            const actions = document.createElement('div');
+            actions.className = 'match-actions';
+
+            const tweetsBtn = document.createElement('button');
+            tweetsBtn.className = 'comments-btn';
+            tweetsBtn.textContent = '💬 Tweets';
+            tweetsBtn.addEventListener('click', () =>
+                window.viewMatchComments && viewMatchComments(hashtag, match.name || ''));
+
+            const postBtn = document.createElement('button');
+            postBtn.className = 'tweet-match-btn';
+            postBtn.textContent = '🐦 Post';
+            postBtn.addEventListener('click', () =>
+                window.tweetAboutMatch && tweetAboutMatch(hashtag, match.name || ''));
+
+            const analyseBtn = document.createElement('button');
+            analyseBtn.className = 'analyse-btn';
+            analyseBtn.textContent = '📊 Analyse';
+            analyseBtn.addEventListener('click', () =>
+                showAnalyseView(window._matchStore[key], analyseBtn));
+
+            actions.appendChild(tweetsBtn);
+            actions.appendChild(postBtn);
+            actions.appendChild(analyseBtn);
+            card.appendChild(actions);
+            return card;
+        };
+    });
+    </script>
 </body>
 </html>

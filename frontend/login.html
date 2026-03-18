@@ -1,17 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CricTweet - Login</title>
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <div class="login-card">
-        <h2 id="form-title">Login</h2>
-        <input id="username" placeholder="Username">
-        <input id="email" type="email" placeholder="Email" style="display:none;">
-        <input id="password" type="password" placeholder="Password">
-        <button id="login-btn" onclick="login()">Login</button>
-        <button id="toggle-btn" onclick="toggleMode()">Need an account? Register</button>
+        <!-- Cricket Theme Header -->
+        <div class="cricket-header">
+            <div class="cricket-icons">
+                <div class="cricket-bat">🏏</div>
+                <div class="cricket-ball">🔴</div>
+            </div>
+            <h1 class="app-title">CricTweet</h1>
+            <p class="app-tagline">Your Cricket Social Hub</p>
+        </div>
+
+        <h2 id="form-title">Welcome Back</h2>
+        
+        <!-- Username Input -->
+        <div class="input-group">
+            <span class="input-icon">👤</span>
+            <input id="username" type="text" placeholder="Username" autocomplete="username">
+        </div>
+
+        <!-- Email Input (hidden by default) -->
+        <div class="input-group" id="email-group" style="display:none;">
+            <span class="input-icon">📧</span>
+            <input id="email" type="email" placeholder="Email" autocomplete="email">
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+            <span class="input-icon">🔒</span>
+            <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button id="login-btn" onclick="login()">Login</button>
+            <button id="toggle-btn" onclick="toggleMode()">Need an account? Register</button>
+        </div>
+
         <p id="error"></p>
     </div>
 
